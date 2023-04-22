@@ -3,15 +3,16 @@ const Cart = require("./cartModel");
 const authMiddleware = require("../../authMiddleware/authMiddleware");
 const app = express.Router();
 
-app.get("/:id" ,authMiddleware ,async(req,res) => {
-    if(req.id !== req.params.id){
-        res.status(404).send({error:true , message: "Cart Id not found"})
-    }
+app.get("/:id" ,async(req,res) => {
+    // if(req.id !== req.params.id){
+    //     res.status(404).send({error:true , message: "Cart Id not found"})
+    // }
+    let id = req.params.id;
     try {
-        let cart = await Cart.findById({ user: req.id}).populate("product")
-        res.status(200).send(cart)
+        let cart = await Cart.findById(id).populate(["product" , "user"])
+       return res.status(200).send(cart)
     } catch (error) {
-        res.status(401).send({error:true , message: "Something went wrong"});
+        return res.status(401).send({error:true , message: "Something went wrong"});
     }
 });
 
